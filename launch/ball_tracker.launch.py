@@ -14,7 +14,7 @@ def generate_launch_description():
     params_file = LaunchConfiguration('params_file')
     params_file_dec = DeclareLaunchArgument(
         'params_file',
-        default_value=os.path.join(get_package_share_directory('ball_tracker'),'config','ball_tracker_params_example.yaml'),
+        default_value=os.path.join(get_package_share_directory('visual_tracking_my_robot'),'params','ball_tracker_params.yaml'),
         description='Full path to params file for all ball_tracker nodes.')
 
     detect_only = LaunchConfiguration('detect_only')
@@ -50,7 +50,7 @@ def generate_launch_description():
     cmd_vel_topic = LaunchConfiguration('cmd_vel_topic')
     cmd_vel_topic_dec = DeclareLaunchArgument(
     'cmd_vel_topic',
-    default_value='/cmd_vel',
+    default_value='/cmd_vel_tracker',
     description='The name of the output command vel topic.')
 
     enable_3d_tracker = LaunchConfiguration('enable_3d_tracker')
@@ -63,7 +63,7 @@ def generate_launch_description():
 
 
     detect_node = Node(
-            package='ball_tracker',
+            package='visual_tracking_my_robot',
             executable='detect_ball',
             parameters=[params_file, {'tuning_mode': tune_detection}],
             remappings=[('/image_in',image_topic)],
@@ -71,14 +71,14 @@ def generate_launch_description():
          )
 
     detect_3d_node = Node(
-            package='ball_tracker',
+            package='visual_tracking_my_robot',
             executable='detect_ball_3d',
             parameters=[params_file],
             condition=IfCondition(enable_3d_tracker)
          )
 
     follow_node = Node(
-            package='ball_tracker',
+            package='visual_tracking_my_robot',
             executable='follow_ball',
             parameters=[params_file, {'use_sim_time': use_sim_time}],
             remappings=[('/cmd_vel',cmd_vel_topic)],
